@@ -5,7 +5,7 @@ import Cookies from 'universal-cookie';
 import validator from "../../hooks/verify_token";
 const cookies = new Cookies();
 
-export default function dashboard() {
+export default function Dashboard() {
     validator('/auth/login', false);
     return (
         <>
