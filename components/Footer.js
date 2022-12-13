@@ -2,8 +2,8 @@ import Link from "next/link"
 
 const Footer =  () => {
     return (
-        <div>
-            Copyright 2022
+        <div className="flex justify-center">
+            کلیه حقوق مادی و معنوی این وب سایت متعلق به Domain می‌باشد.
         </div>
     )
 }
