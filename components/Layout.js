@@ -7,15 +7,17 @@ export default function Layout ({children}) {
     return (
         <>
             <Toaster/>
-            <div className="content">
-                <Header/>
-                <Navbar/>
-                <hr/>
-                <main>
-                    {children}
-                </main>
-                <hr/>
-                <Footer/>
+            <div className="flex flex-col h-screen">
+                <div className="flex-none">
+                    <Header/>
+                    <Navbar/>
+                </div>
+                    <main className="flex-grow">
+                        {children}
+                    </main>
+                <div className="flex-none">
+                    <Footer/>
+                </div>
             </div>
         </>
     )
