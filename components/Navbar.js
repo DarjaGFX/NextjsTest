@@ -8,24 +8,21 @@ const Navbar =  () => {
     // const auth = useAuth();
     return (
         <>
-            <nav>
+            <nav className=" border-x-slate-700 border-y-2 pb-3">
                 <div className="flex flex-row-reverse mr-10 mt-3">
-                    
-                    {/* {auth.user ? (
-                        <div>
-                            <Link to="/account">Account ({auth.user.email})</Link>
-                            <Button onClick={() => auth.signout()}>Signout</Button>
-                        </div>
-                        ) : (
-                        <Link to="/signin">Signin</Link>
-                        )
-                    } */}
-                    <Link href={'/tests'}>
-                        <p>‌آزمون‌ها</p>
+                    <Link className="px-3  hover:bg-gray-200" href={'/dashboard'} >
+                        داشبورد
                     </Link>
-
+                    <Link className="px-3  hover:bg-gray-200" href={'/tests'}>
+                        آزمون‌ها
+                    </Link>
                 </div>
             </nav>
+                {/* <div className="hidden flex-row-reverse mr-10 mt-3">
+                    <Link className="pl-5" href={'/dashboard'}>
+                        <p>داشبورد</p>
+                    </Link>
+                </div> */}
         </>
     )
 }

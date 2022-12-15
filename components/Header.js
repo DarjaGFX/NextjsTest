@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link"
 // import { useAuth } from "../hooks/useAuth";
 import validator from "../hooks/verify_token"
@@ -15,7 +16,7 @@ const Header =  () => {
                             سنجش و پایش
                         </h1>
                     </Link>
-                    <img className="flex-1" src="../public/vercel.svg"></img>
+                    <Image width={30} height={30} className="flex-1" src="/vercel.svg" alt="Site Logo" className="w-20"></Image>
                 </div>
             </nav>
         </>
