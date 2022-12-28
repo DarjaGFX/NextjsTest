@@ -19,7 +19,6 @@ export default function LoginPage() {
     const [VCode, setVCode] = useState("");
     const [sendCode, setsendCode] = useState(false);
     
-    const cookies = new Cookies();
     
     useEffect(() => {
         const tf = async (VCode, mobile) => {
@@ -38,8 +37,10 @@ export default function LoginPage() {
                     });
                     const data = await response.json();
                     if (response.status === 200){
-                        // cookies.set("token", data?.access_token, {path: '/'});
-                        // Router.push('/dashboard');
+                        // window.sessionStorage.setItem("token", data?.access_token)
+                        const cookies = new Cookies();
+                        cookies.set("token", data?.access_token, {path: '/'});
+                        Router.push('/Dashboard');
                     }
                     else{
                         // Router.reload();
@@ -59,7 +60,7 @@ export default function LoginPage() {
         const tf = async (mobile) =>{
             try{
                 if(mobile != ""){
-                    const refreshToast = toast.loading('sending VerificationCode...');
+                    const refreshToast = toast.loading('...در حال ارسال رمز یکبار مصرف ورود');
                     const response = await fetch('http://localhost:8001/api/v1/user/request_verification_code', {
                         method: 'POST',
                         body: JSON.stringify({mobile}),
@@ -72,14 +73,14 @@ export default function LoginPage() {
                         // let d = new Date();
                         // d.setTime(d.getTime() + (60*60*1000));
                         // cookies.set("token", data?.access_token, {path: '/', expires: d});
-                        toast.success('Verification Code Sent!', {
+                        toast.success('.رمز یکبار مصرف ارسال شد', {
                             id: refreshToast,
                         })
                         setsendCode(true);
                         // Router.push('/auth/verification?mobileNo='+mobile);
                     }
                     else{
-                            toast.error('Operation Failed!', {
+                            toast.error('.ارسال رمز یکبار مصرف با خطا مواجه شد', {
                                 id: refreshToast,
                             })
                                     // Router.push('/500');

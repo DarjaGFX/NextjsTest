@@ -8,7 +8,7 @@ const Tests = ({data}) => {
                     data.map(d => {
                         return (
                             <div key={d.name} className=" p-4 border-2  rounded-full hover:bg-gray-200 ">
-                                <Link href={`/tests/${d.name}`}>
+                                <Link href={`/Tests/${d.name}`}>
                                     <p>{d.display_name}</p>
                                 </Link>
                             </div>
