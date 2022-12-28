@@ -4,7 +4,7 @@ const cookies = new Cookies();
 export default async function validator(url, on_success=true){
     const token = cookies.get("token");
     if (token){
-        const response = await fetch('http://localhost:8001/api/v1/user/verify_token', {
+        const response = await fetch('http://192.168.1.55:8001/api/v1/user/verify_token', {
             method: 'POST',
             headers: {
                 Authorization: "Bearer " + token

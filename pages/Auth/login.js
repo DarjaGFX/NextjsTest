@@ -28,7 +28,7 @@ export default function LoginPage() {
                         'username=' + mobile,
                         'password=' + VCode
                     ]
-                    const response = await fetch('http://localhost:8001/api/v1/user/login', {
+                    const response = await fetch('http://192.168.1.55:8001/api/v1/user/login', {
                         method: 'POST',
                         body: body_data.join('&'),
                         headers: {
@@ -61,7 +61,7 @@ export default function LoginPage() {
             try{
                 if(mobile != ""){
                     const refreshToast = toast.loading('...در حال ارسال رمز یکبار مصرف ورود');
-                    const response = await fetch('http://localhost:8001/api/v1/user/request_verification_code', {
+                    const response = await fetch('http://192.168.1.55:8001/api/v1/user/request_verification_code', {
                         method: 'POST',
                         body: JSON.stringify({mobile}),
                         headers: {
@@ -105,7 +105,7 @@ export default function LoginPage() {
         //     'username=' + mobile,
         //     'password=' + VCode
         // ]
-        // const response = await fetch('http://localhost:8001/api/v1/user/login', {
+        // const response = await fetch('http://192.168.1.55:8001/api/v1/user/login', {
         //     method: 'POST',
         //     body: body_data.join('&'),
         //     headers: {

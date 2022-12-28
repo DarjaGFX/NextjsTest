@@ -3,6 +3,8 @@ import { Box, Button, Fab, TextField } from "@mui/material";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import QuestionBar from "../../../components/QuestionBar";
+import FloatingButton from "../../../components/FloatingButton";
+import Sidebar from "../../../components/Sidebar";
 import SidebarLinks from "../../../components/SidebarLinks";
 
 export default function TestName ({test}, {isAdmin}){
@@ -14,24 +16,21 @@ export default function TestName ({test}, {isAdmin}){
       testNameRef.current.value = test.name;
       testDNameRef.current.value = test.display_name;
     }, [test])
-    
+    const question = {
+        id: 0,
+        text: "nothing!"
+    }
     return (
         <div className="flex flex-row-reverse h-full w-full">
+        <FloatingButton />
 
-            <div className="flex flex-col h-full border-l-2 sm:hidden md:inline w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 items-center">
+            <Sidebar>
                 <div className="border-b-4 rounded-b-lg  w-full flex justify-center items-center h-20">
                 <p> ویرایش {test.display_name} </p>
                 </div>
-                {/* <SidebarLinks href={"#"} text={"حساب کاربری"} /> */}
+            </Sidebar>
 
-            </div>
-            {/* Dashboard Sidebar */}
-            <div className="flex flex-col items-center w-full h-full overflow-scroll scroll-smooth" >
-                <div className="fixed bottom-14 right-14 ">
-                        <Fab color="primary" aria-label="add">
-                            <AddCircleOutline />
-                        </Fab>
-                </div>
+            <div className="flex flex-col items-center w-full h-full overflow-scroll scroll-smooth scrollbar-hide" >
                 <div className="flex flex-row-reverse items-center justify-center w-full">
                     <Box
                         component="form"
@@ -46,7 +45,7 @@ export default function TestName ({test}, {isAdmin}){
                             id="standard-basic" 
                             inputProps={{ inputMode: 'text' }}
                             label="نام" 
-                            variant="standard" 
+                            variant="standard"
                             inputRef={testNameRef}
                         />
                         <TextField 
@@ -67,7 +66,7 @@ export default function TestName ({test}, {isAdmin}){
 }
 
 export async function getStaticPaths(){
-    const response = await fetch('http://127.0.0.1:8001/api/v1/tests/');
+    const response = await fetch('http://192.168.1.55:8001/api/v1/tests/');
     const data = await response.json();
     const paths = data.map( d => {
         return {
@@ -89,7 +88,7 @@ export async function getStaticPaths(){
 
 export async function getStaticProps(context){
     const {params} = context;
-    const response = await fetch(`http://127.0.0.1:8001/api/v1/tests/${params.name}`);
+    const response = await fetch(`http://192.168.1.55:8001/api/v1/tests/${params.name}`);
     const data = await response.json();
     return {
         props: {

@@ -4,7 +4,7 @@ import  Router  from "next/router";
 
 
 const fetcher = async () => {
-    const response = await fetch('http://127.0.0.1:8001/api/v1/tests/');
+    const response = await fetch('http://192.168.1.55:8001/api/v1/tests/');
     const data = await response.json();
     return data;
 }
@@ -34,7 +34,7 @@ export default function Test(){
 
 
 // export async function getServerSideProps(context){
-//     const response = await fetch('http://127.0.0.1:8001/api/v1/tests/');
+//     const response = await fetch('http://192.168.1.55:8001/api/v1/tests/');
 //     const data = await response.json();
 //     return {
 //         props: {
