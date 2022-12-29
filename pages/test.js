@@ -7,7 +7,7 @@ export default function Index(){
     const [x , setx] = useState(0);
     const handleToast = async () => {
         const refreshToast = toast.loading('felan daram micharkham');
-        const data = await fetch('http://192.168.1.55:8001/api/v1/tests/');
+        const data = await fetch('http://localhost:8001/api/v1/tests/');
         toast.success('tamum shod belakhare!', {
             id: refreshToast,
         })

@@ -9,7 +9,7 @@ const TestCard = ({test, testSet, setTestSet}) => {
   const removeTest = async (test) =>{
 		const refreshToast = toast.loading('...در حال حذف آزمون');
 	    const token = cookies.get("token");
-		const response = await fetch(`http://192.168.1.55:8001/api/v1/tests/${test.id}`, {
+		const response = await fetch(`http://localhost:8001/api/v1/tests/${test.id}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',

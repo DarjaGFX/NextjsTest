@@ -24,7 +24,7 @@ const Tests = ({data}) => {
 export default Tests;
 
 export async function getServerSideProps(context){
-    const response = await fetch('http://192.168.1.55:8001/api/v1/tests/');
+    const response = await fetch('http://localhost:8001/api/v1/tests/');
     const data = await response.json();
     return {
         props: {

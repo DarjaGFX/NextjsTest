@@ -35,7 +35,7 @@ export default function Dashboard() {
 // export async function getServerSideProps(){
 //     validator('/auth/login', false);
 //     const token = cookies.get("token");
-//     const response = await fetch('http://192.168.1.55:8001/api/v1/user/verify_token', {
+//     const response = await fetch('http://localhost:8001/api/v1/user/verify_token', {
 //             method: 'POST',
 //             headers: {
 //                 Authorization: "Bearer " + token

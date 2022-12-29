@@ -24,7 +24,7 @@ export default function Manage ({tests}){
 }
 
 export async function getServerSideProps(context){
-  const response = await fetch('http://192.168.1.55:8001/api/v1/tests/');
+  const response = await fetch('http://localhost:8001/api/v1/tests/');
   const tests = await response.json();
   console.log(tests);
   return {
