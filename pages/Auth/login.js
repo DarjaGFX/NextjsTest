@@ -1,18 +1,15 @@
 import Router from "next/router";
 import { useState, useEffect } from "react";
-import validator from "../../hooks/verify_token";
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import toast from "react-hot-toast";
 import { useRef } from "react";
 import Cookies from "universal-cookie";
+import * as api from "../../api/apiLogin";
 
 
 export default function LoginPage() {
-    // validator('/dashboard');
     const [mobile, setMobile] = useState("");
     const mobileRef = useRef(null);
     const VCodeRef = useRef(null);
@@ -28,18 +25,11 @@ export default function LoginPage() {
                         'username=' + mobile,
                         'password=' + VCode
                     ]
-                    const response = await fetch('http://localhost:8001/api/v1/user/login', {
-                        method: 'POST',
-                        body: body_data.join('&'),
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    });
-                    const data = await response.json();
-                    if (response.status === 200){
+                    const login = await api.PostLogin(body_data.join('&'));
+                    if (login.status === 200){
                         // window.sessionStorage.setItem("token", data?.access_token)
                         const cookies = new Cookies();
-                        cookies.set("token", data?.access_token, {path: '/'});
+                        cookies.set("token", login.data?.access_token, {path: '/'});
                         Router.push('/Dashboard');
                     }
                     else{
@@ -61,15 +51,8 @@ export default function LoginPage() {
             try{
                 if(mobile != ""){
                     const refreshToast = toast.loading('...در حال ارسال رمز یکبار مصرف ورود');
-                    const response = await fetch('http://localhost:8001/api/v1/user/request_verification_code', {
-                        method: 'POST',
-                        body: JSON.stringify({mobile}),
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        })
-                    const data = await response.json()
-                    if (response.status === 200){
+                    const {status}  = await api.PostLoginRequestVerificationCode(JSON.stringify({mobile}));
+                    if (status === 200){
                         // let d = new Date();
                         // d.setTime(d.getTime() + (60*60*1000));
                         // cookies.set("token", data?.access_token, {path: '/', expires: d});
@@ -84,7 +67,7 @@ export default function LoginPage() {
                                 id: refreshToast,
                             })
                                     // Router.push('/500');
-                        }
+                    }
                         // Router.reload();  
                 }  
             }
@@ -101,25 +84,6 @@ export default function LoginPage() {
     const login = async (e) => {
         e.preventDefault();
         setVCode(VCodeRef.current.value);
-        // const body_data = [
-        //     'username=' + mobile,
-        //     'password=' + VCode
-        // ]
-        // const response = await fetch('http://localhost:8001/api/v1/user/login', {
-        //     method: 'POST',
-        //     body: body_data.join('&'),
-        //     headers: {
-        //         'Content-Type': 'application/x-www-form-urlencoded',
-        //     },
-        // })
-        // const data = await response.json()
-        // if (response.status === 200){
-        //     cookies.set("token", data?.access_token, {path: '/'});
-        //     // Router.push('/dashboard');
-        // }
-        // else{
-        //     // Router.reload();
-        // }
     }
 
     const resetPage = async (e) => {
@@ -196,12 +160,3 @@ export default function LoginPage() {
         </>
     )
 }
-
-// export async function getServerSideProps(context){
-//     validator('/dashboard');
-//     return {
-//         props: {
-            
-//         }
-//     }
-// }

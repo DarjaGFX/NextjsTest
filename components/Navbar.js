@@ -2,7 +2,7 @@ import { AppBar, Toolbar } from "@mui/material";
 import Link from "next/link"
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
-
+import * as api from '../api/apiLogin';
 
 
 
@@ -14,13 +14,8 @@ const Navbar =  () => {
         // const token = window.sessionStorage.getItem("token");
         if (token) {
             const vt = async (token) => {
-                const response = await fetch('http://localhost:8001/api/v1/user/verify_token', {
-                    method: 'POST',
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                });
-                return response.status;               
+                const {status} = await api.PostVerifyToken(token)
+                return status;               
             }
             vt(token)
             .then(data => {
@@ -48,7 +43,6 @@ const Navbar =  () => {
         <div>
         <AppBar position="static">
             <Toolbar className="flex flex-row-reverse justify-between">
-                {/* <div className="flex flex-row-reverse mr-10 mt-3 justify-between"> */}
                     <div>
                         {logedIn ? (
                                 <Link className="px-3  hover:underline" href={'/Dashboard'} >
@@ -74,16 +68,9 @@ const Navbar =  () => {
                             )
                         }
                     </div>
-                {/* </div> */}
             </Toolbar>
         </AppBar>
         </div>
-
-        // <>
-        //     <nav className=" border-x-slate-700 border-y-2 pb-3">
-                
-        //     </nav>
-        // </>
     )
 }
 
