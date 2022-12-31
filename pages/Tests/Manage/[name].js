@@ -1,25 +1,31 @@
-import { AddCircleOutline } from "@mui/icons-material";
-import { Box, Button, Fab, TextField } from "@mui/material";
-import Image from "next/image";
+import { Box, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import QuestionBar from "../../../components/QuestionBar";
+import * as TestApi from '../../../api/apiTests';
+import * as QuestionApi from '../../../api/apiQuestions';
 import FloatingButton from "../../../components/FloatingButton";
+import QuestionBar from "../../../components/QuestionBar";
 import Sidebar from "../../../components/Sidebar";
-import SidebarLinks from "../../../components/SidebarLinks";
 
 export default function TestName ({test}, {isAdmin}){
     const [testName, setTestName] = useState(test.name);
     const testNameRef = useRef(test.name);
     const [testDisplayName, setTestDisplayName] = useState(test.display_name);
     const testDNameRef = useRef(test.display_name);
+    const [questions, setQuestions] = useState();
     useEffect(() => {
       testNameRef.current.value = test.name;
       testDNameRef.current.value = test.display_name;
     }, [test])
-    const question = {
-        id: 0,
-        text: "nothing!"
-    }
+
+    useEffect(() => {
+        const taf = async () => {
+            const {data} = await TestApi.GetTestQuestions(test.id);
+            console.log(data);
+            setQuestions(data);
+        }
+        taf();
+    }, [test])
+    
     return (
         <div className="flex flex-row-reverse h-full w-full">
         <FloatingButton />
@@ -39,26 +45,30 @@ export default function TestName ({test}, {isAdmin}){
                         }}
                         noValidate
                         autoComplete="off"
-                        className="flex items-center  p-10 rounded-3xl border-b-2"
+                        className="flex items-center  p-10 border-b-2"
                     >
                         <TextField 
                             id="standard-basic" 
                             inputProps={{ inputMode: 'text' }}
-                            label="نام" 
+                            label="نام آزمون" 
                             variant="standard"
                             inputRef={testNameRef}
                         />
                         <TextField 
                             id="standard-basic" 
                             inputProps={{ inputMode: 'text' }}
-                            label="نام نمایشی" 
+                            label="نام نمایشی آزمون" 
                             variant="standard" 
                             inputRef={testDNameRef}
                         />
                     </Box>
                 </div>
                 {/* Question Row Components */}
-                    <QuestionBar key={question?.id || 0} question={question ? question : null} test={test} />
+                    {questions?.map(q=>{
+                        return (
+                            <QuestionBar key={q?.id} question={q} questions={questions} setQuestions={setQuestions} />
+                        )
+                    })}
                 {/* Question Row Components */}
             </div>
         </div>
@@ -66,7 +76,7 @@ export default function TestName ({test}, {isAdmin}){
 }
 
 export async function getStaticPaths(){
-    const {data} = await api.GetAllTests();
+    const {data} = await TestApi.GetAllTests();
     const paths = data.map( d => {
         return {
             params: {
@@ -87,7 +97,7 @@ export async function getStaticPaths(){
 
 export async function getStaticProps(context){
     const {params} = context;
-    const {data} = await api.GetTestByNameID(params.name);
+    const {data} = await TestApi.GetTestByNameID(params.name);
     return {
         props: {
             test: data

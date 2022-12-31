@@ -23,6 +23,17 @@ const GetTestByNameID = async (params, userToken = null) => {
 };
 
 
+const GetTestQuestions = async (params, userToken = null) => {
+  const config = userToken ? {
+    headers: {
+      'Authorization': "Bearer " + userToken
+    },
+  } : {};
+  const response = await api.get("tests/" + params + "/questions", config);
+  return response;
+};
+
+
 const DeleteTestByID = async (params, userToken) => {
   const config = userToken ? {
     headers: {
@@ -35,4 +46,4 @@ const DeleteTestByID = async (params, userToken) => {
 
 
 
-export { GetAllTests, GetTestByNameID, DeleteTestByID };
+export { GetAllTests, GetTestByNameID, DeleteTestByID, GetTestQuestions };
