@@ -1,6 +1,7 @@
+import * as api from '../../api/apiTests';
+
 
 export default function TestName ({test}){
-    console.log(test);
     return (
         <>
             <div className="flex flex-row-reverse justify p-10 bg-cyan-100 h-full">
@@ -14,8 +15,7 @@ export default function TestName ({test}){
 }
 
 export async function getStaticPaths(){
-    const response = await fetch('http://localhost:8001/api/v1/tests/');
-    const data = await response.json();
+    const {data} = await api.GetAllTests();
     const paths = data.map( d => {
         return {
             params: {
@@ -36,8 +36,7 @@ export async function getStaticPaths(){
 
 export async function getStaticProps(context){
     const {params} = context;
-    const response = await fetch(`http://localhost:8001/api/v1/tests/${params.name}`);
-    const data = await response.json();
+    const {data} = await api.GetTestByNameID(params.name);
     return {
         props: {
             test: data

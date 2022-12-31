@@ -1,11 +1,7 @@
-import { AddCircleOutline } from "@mui/icons-material";
-import { Button, Fab } from "@mui/material";
-import  Router  from "next/router";
 import { useState } from "react";
-import { toast } from "react-hot-toast";
-import Cookies from "universal-cookie";
 import FloatingButton from "../../../components/FloatingButton";
 import TestCard from "../../../components/TestCard";
+import * as api from '../../../api/apiTests';
 
 export default function Manage ({tests}){
   const [testSet, setTestSet] = useState(tests);
@@ -24,12 +20,10 @@ export default function Manage ({tests}){
 }
 
 export async function getServerSideProps(context){
-  const response = await fetch('http://localhost:8001/api/v1/tests/');
-  const tests = await response.json();
-  console.log(tests);
+  const {data} = await api.GetAllTests();
   return {
 	  props: {
-		  tests: tests
+		  tests: data
 	  }
   }
 }

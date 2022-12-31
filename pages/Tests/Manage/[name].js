@@ -66,8 +66,7 @@ export default function TestName ({test}, {isAdmin}){
 }
 
 export async function getStaticPaths(){
-    const response = await fetch('http://localhost:8001/api/v1/tests/');
-    const data = await response.json();
+    const {data} = await api.GetAllTests();
     const paths = data.map( d => {
         return {
             params: {
@@ -88,8 +87,7 @@ export async function getStaticPaths(){
 
 export async function getStaticProps(context){
     const {params} = context;
-    const response = await fetch(`http://localhost:8001/api/v1/tests/${params.name}`);
-    const data = await response.json();
+    const {data} = await api.GetTestByNameID(params.name);
     return {
         props: {
             test: data

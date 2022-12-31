@@ -1,18 +1,8 @@
-import useSWR from "swr";
 import Link from "next/link";
+import * as api from '../../api/apiTests';
 
 
-const fetcher = async () => {
-    const response = await fetch('http://localhost:8001/api/v1/tests/');
-    const data = await response.json();
-    return data;
-}
-
-
-export default function Test(){
-    const {data , error} = useSWR('tests', fetcher);
-    if (error) return <h1>Something went wrong!</h1> 
-    if (!data) return <h1>Something went wrong!</h1>
+const Tests = ({data}) => {
     return (
         <>
             <div className="flex flex-row-reverse pt-20 pr-10">
@@ -30,4 +20,15 @@ export default function Test(){
             </div>
         </>
     )
+}
+
+export default Tests;
+
+export async function getServerSideProps(){
+    const {data} = await api.GetAllTests();
+    return {
+        props: {
+            data: data
+        }
+    }
 }
