@@ -1,4 +1,4 @@
-import { Box, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import * as TestApi from '../../../api/apiTests';
 import * as QuestionApi from '../../../api/apiQuestions';
@@ -20,15 +20,18 @@ export default function TestName ({test}, {isAdmin}){
     useEffect(() => {
         const taf = async () => {
             const {data} = await TestApi.GetTestQuestions(test.id);
-            console.log(data);
             setQuestions(data);
         }
         taf();
     }, [test])
     
+    const addQuestionbar = () =>{
+        setQuestions([...questions, {id:0, text:"", coefficient:0}]);
+    }
+
     return (
         <div className="flex flex-row-reverse h-full w-full">
-        <FloatingButton />
+        <FloatingButton/>
 
             <Sidebar>
                 <div className="border-b-4 rounded-b-lg  w-full flex justify-center items-center h-20">
@@ -70,6 +73,13 @@ export default function TestName ({test}, {isAdmin}){
                         )
                     })}
                 {/* Question Row Components */}
+                <div className="flex flex-row-reverse w-full p-7">
+                    <Button variant="text" color="primary" onClick={addQuestionbar}>افزودن سوال</Button>
+                </div>
+                <button onClick={(e) => {
+                    e.preventDefault();
+                    console.log(questions);
+                }}>print</button>
             </div>
         </div>
     )

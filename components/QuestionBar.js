@@ -1,23 +1,22 @@
-import { IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material"
-import { Box } from "@mui/system"
+import { IconButton, TextField, ToggleButtonGroup, Typography } from "@mui/material"
 import { useEffect, useRef, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import * as QuestionApi from '../api/apiQuestions';
 import { toast } from "react-hot-toast";
 import Cookies from "universal-cookie";
-
+import CheckIcon from '@mui/icons-material/Check';
+import ToggleButton from '@mui/material/ToggleButton';
 
 const cookies = new Cookies();
 
 export default function QuestionBar({question, questions, setQuestions}) {
 		const [questionText, setQuestionText] = useState(question?.text);
-		const questionTextRef = useRef(question?.text)
-		const [direction, setDirection] = useState(false);
+		const [coefficient, setCoefficient] = useState(question?.coefficient);
 
-		const handleChange = (event, newDirection) => {
-			if (newDirection !== null) {
-				setDirection(newDirection);
-				console.log(direction);
+		const handleChange = (event, newCoefficient) => {
+			if (newCoefficient !== null) {
+				setCoefficient(newCoefficient);
+				// console.log(coefficient);
 			}
 		};
 		
@@ -40,12 +39,16 @@ export default function QuestionBar({question, questions, setQuestions}) {
 		};
 
 		useEffect(() => {
-				questionTextRef.current.value = question?.text;
-		}, [question])
+			questions.filter(t => t.id == question.id).map(x=>{
+				x.text = questionText;
+				x.coefficient = coefficient;
+			});
+			setQuestions(questions);
+		}, [questionText, coefficient])
 		
 		
 		return (
-				<div className="flex flex-row-reverse items-center justify-center w-full pr-7 pl-20">
+				<div className= "flex flex-row-reverse items-center justify-center w-full px-7">
 					<IconButton aria-label="delete" onClick={handleRemove}>
 						<DeleteIcon />
 					</IconButton>
@@ -57,20 +60,21 @@ export default function QuestionBar({question, questions, setQuestions}) {
 						id="standard-basic" 
 						inputProps={{ inputMode: 'text' }}
 						label="سوال" 
-						variant="standard" 
-						inputRef={questionTextRef}
+						variant="standard"
+						value={questionText}
+						onChange={e=>setQuestionText(e.target.value)}
 					/>
-					<p className="p-4">:ارزش پاسخ‌ها</p>
+					<p className="p-4 min-w-fit">:ارزش پاسخ‌ها</p>
 					<ToggleButtonGroup
 						className="pl-10"
 						color="primary"
-						value={direction}
+						value={coefficient}
 						exclusive
 						onChange={handleChange}
 						aria-label="Platform"
 					>
-						<ToggleButton value={false}>نزولی</ToggleButton>
-						<ToggleButton value={true}>صعودی</ToggleButton>
+						<ToggleButton value={0}>نزولی</ToggleButton>
+						<ToggleButton value={1}>صعودی</ToggleButton>
 					</ToggleButtonGroup>
 				</div>
 		)
