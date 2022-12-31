@@ -21,8 +21,8 @@ const TestCard = ({test, testSet, setTestSet}) => {
 			toast.success('.آزمون حذف شد', {
 				id: refreshToast,
 			});
-      const newSet = testSet.filter(x=>x.id!=test.id)
-      setTestSet(newSet);
+		const newSet = testSet.filter(x=>x.id!=test.id)
+		setTestSet(newSet);
 		}
 	}
 	const edit = async (test) => {
