@@ -5,17 +5,41 @@ import * as QuestionApi from '../../../api/apiQuestions';
 import FloatingButton from "../../../components/FloatingButton";
 import QuestionBar from "../../../components/QuestionBar";
 import Sidebar from "../../../components/Sidebar";
+import Cookies from "universal-cookie";
+
+
+const cookies = new Cookies();
 
 export default function TestName ({test}, {isAdmin}){
     const [testName, setTestName] = useState(test.name);
-    const testNameRef = useRef(test.name);
     const [testDisplayName, setTestDisplayName] = useState(test.display_name);
-    const testDNameRef = useRef(test.display_name);
     const [questions, setQuestions] = useState();
+
+    const token = cookies.get("token");
     useEffect(() => {
-      testNameRef.current.value = test.name;
-      testDNameRef.current.value = test.display_name;
-    }, [test])
+        const vt = async () => {
+            const response = typeof(test.id)!="string" ? await TestApi.PutUpdateTest(
+                JSON.stringify({
+                    id: test.id,
+                    name: testName,
+                    display_name: testDisplayName
+                }),
+                token
+            ):
+            await TestApi.PostCreateTest(
+                JSON.stringify({
+                    name: testName,
+                    display_name: testDisplayName
+                }),
+                token
+            )
+            if (response.status == 200){
+                test.id = Number(response.data.id);
+            }
+        }
+        vt();
+    }, [test, testName, testDisplayName, token])
+    
 
     useEffect(() => {
         const taf = async () => {
@@ -26,7 +50,9 @@ export default function TestName ({test}, {isAdmin}){
     }, [test])
     
     const addQuestionbar = () =>{
-        setQuestions([...questions, {id:0, text:"", coefficient:0}]);
+        if(!questions.some(x => typeof(x.id)=="string")){
+            setQuestions([...questions, {id:"0"+(new Date()).valueOf(), text:"", coefficient:0}]);
+        }
     }
 
     return (
@@ -55,31 +81,33 @@ export default function TestName ({test}, {isAdmin}){
                             inputProps={{ inputMode: 'text' }}
                             label="نام آزمون" 
                             variant="standard"
-                            inputRef={testNameRef}
+                            value={testName}
+                            onChange={e=>setTestName(e.target.value)}
                         />
                         <TextField 
                             id="standard-basic" 
                             inputProps={{ inputMode: 'text' }}
                             label="نام نمایشی آزمون" 
                             variant="standard" 
-                            inputRef={testDNameRef}
+                            value={testDisplayName}
+                            onChange={e=>setTestDisplayName(e.target.value)}
                         />
                     </Box>
                 </div>
                 {/* Question Row Components */}
                     {questions?.map(q=>{
                         return (
-                            <QuestionBar key={q?.id} question={q} questions={questions} setQuestions={setQuestions} />
+                            <QuestionBar key={q?.id} question={q} questions={questions} setQuestions={setQuestions} test={test}/>
                         )
                     })}
                 {/* Question Row Components */}
                 <div className="flex flex-row-reverse w-full p-7">
                     <Button variant="text" color="primary" onClick={addQuestionbar}>افزودن سوال</Button>
                 </div>
-                <button onClick={(e) => {
+                {/* <button onClick={(e) => {
                     e.preventDefault();
                     console.log(questions);
-                }}>print</button>
+                }}>print</button> */}
             </div>
         </div>
     )

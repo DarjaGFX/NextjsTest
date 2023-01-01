@@ -7,9 +7,10 @@ import Cookies from "universal-cookie";
 import CheckIcon from '@mui/icons-material/Check';
 import ToggleButton from '@mui/material/ToggleButton';
 
+
 const cookies = new Cookies();
 
-export default function QuestionBar({question, questions, setQuestions}) {
+export default function QuestionBar({question, questions, setQuestions, test}) {
 		const [questionText, setQuestionText] = useState(question?.text);
 		const [coefficient, setCoefficient] = useState(question?.coefficient);
 
@@ -21,30 +22,61 @@ export default function QuestionBar({question, questions, setQuestions}) {
 		};
 		
 		const handleRemove = async () => {
-			const refreshToast = toast.loading('...در حال حذف سوال');
-			const token = cookies.get("token");
-			const {status} = await QuestionApi.DeleteQuestion(question.id, token);
-			if (status != 200){
-				toast.error('.حذف سوال با خطا مواجه شد', {
-					id: refreshToast,
-				});
+			if (typeof(question.id) === "string"){
 				const newSet = questions.filter(x=>x.id!=question.id);
 				setQuestions(newSet);
 			}
 			else{
-				toast.success('.سوال حذف شد', {
-					id: refreshToast,
-				});
+				const refreshToast = toast.loading('...در حال حذف سوال');
+				const token = cookies.get("token");
+				const {status} = await QuestionApi.DeleteQuestion(question.id, token);
+				if (status != 200){
+					toast.error('.حذف سوال با خطا مواجه شد', {
+						id: refreshToast,
+					});
+					const newSet = questions.filter(x=>x.id!=question.id);
+					setQuestions(newSet);
+				}
+				else{
+					toast.success('.سوال حذف شد', {
+						id: refreshToast,
+					});
+				}
 			}
 		};
 
+		const token = cookies.get("token");
 		useEffect(() => {
-			questions.filter(t => t.id == question.id).map(x=>{
-				x.text = questionText;
-				x.coefficient = coefficient;
-			});
-			setQuestions(questions);
-		}, [questionText, coefficient])
+			const vt = async () => {
+				const response = typeof(question.id)=="string" ?  await QuestionApi.PostCreateQuestion(
+						JSON.stringify({
+							"test": test.id,
+							"text": questionText,
+							"coefficient": coefficient
+						}),
+						token
+					):
+					await QuestionApi.PutUpdateQuestion(
+						JSON.stringify({
+							"id": question.id,
+							"text": questionText,
+							"coefficient": coefficient
+						}),
+						token
+					)
+				if (response.status == 200){
+					questions.filter(t => t.id == question.id).map(x=>{
+						x.text = questionText;
+						x.coefficient = coefficient;
+						x.id = Number(response.data.id)
+					});
+					setQuestions(questions);
+				}
+			}
+			if (questionText != ""){
+				vt();
+			}
+		}, [questionText, coefficient, question, questions, setQuestions, test, token])
 		
 		
 		return (
@@ -53,6 +85,7 @@ export default function QuestionBar({question, questions, setQuestions}) {
 						<DeleteIcon />
 					</IconButton>
 					<TextField 
+						dir="rtl"
 						className="text-right"
 						multiline
 						maxRows={2}

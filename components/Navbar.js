@@ -9,7 +9,7 @@ import * as api from '../api/apiLogin';
 const Navbar =  () => {
     const cookies = new Cookies();
     const [logedIn, setLogedIn] = useState(false);
-        const token = cookies.get("token");
+    const token = cookies.get("token");
         useEffect(() => {
         // const token = window.sessionStorage.getItem("token");
         if (token) {

@@ -1,6 +1,28 @@
 import api from '../services/api';
 
 
+const PostCreateTest = async (params, userToken) => {
+  const config = userToken ? {
+    headers: {
+      'Authorization': "Bearer " + userToken
+    },
+  } : {};
+  const response = await api.post("/tests/", params, config);
+  return response;
+};
+
+
+const PutUpdateTest = async (params, userToken) => {
+  const config = userToken ? {
+    headers: {
+      'Authorization': "Bearer " + userToken
+    },
+  } : {};
+  const response = await api.put("/tests/", params, config);
+  return response;
+};
+
+
 const GetAllTests = async (params = null, userToken = null) => {
   const config = userToken ? {
     headers: {
@@ -46,4 +68,4 @@ const DeleteTestByID = async (params, userToken) => {
 
 
 
-export { GetAllTests, GetTestByNameID, DeleteTestByID, GetTestQuestions };
+export { PostCreateTest, PutUpdateTest, GetAllTests, GetTestByNameID, DeleteTestByID, GetTestQuestions };
