@@ -1,18 +1,40 @@
-import { Box, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, Button, Slide, TextField } from "@mui/material";
+import { forwardRef, useEffect, useState } from "react";
 import * as TestApi from '../api/apiTests';
 import FloatingButton from "./FloatingButton";
 import QuestionBar from "./QuestionBar";
 import Cookies from "universal-cookie";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 
 const cookies = new Cookies();
+
+const Alert = forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
 
 export default function ManageTest ({test}){
     const [testName, setTestName] = useState(test.name);
     const [testDisplayName, setTestDisplayName] = useState(test.display_name);
     const [questions, setQuestions] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [transition, setTransition] = useState(undefined);
     const token = cookies.get("token");
+
+    const handleClick = () => {
+        setOpen(true);
+    };
+    
+    const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+
+    setOpen(false);
+    };
+
 
     useEffect(() => {
         const vt = async () => {
@@ -42,22 +64,37 @@ export default function ManageTest ({test}){
 
     useEffect(() => {
         const taf = async () => {
-            const {data} = await TestApi.GetTestQuestions(test.id);
+            const {status, data} = await TestApi.GetTestQuestions(test.id);
             setQuestions(data);
         }
-        taf();
+        if (typeof(test.id)!="string") taf();
     }, [test])
     
     const addQuestionbar = () =>{
-        if(!questions?.some(x => typeof(x.id)=="string")){
-            setQuestions([...questions, {id:"0"+(new Date()).valueOf(), text:"", coefficient:0}]);
+        if(testName != "" && testDisplayName != ""){
+            if(!questions?.some(x => typeof(x.id)=="string")){
+                setQuestions([...questions, {id:"0"+(new Date()).valueOf(), text:"", coefficient:0}]);
+            }
+        }else{
+            setTransition(() => TransitionRight);
+            setOpen(true);
         }
     }
-
+    function TransitionRight(props) {
+        return <Slide {...props} direction="right" />;
+      }
+    
     return (
         <>
             <FloatingButton func={addQuestionbar}/>
             <div className="flex flex-col items-center w-full h-full overflow-scroll scroll-smooth scrollbar-hide" >
+                <Stack spacing={2} sx={{ width: '100%' }}>
+                    <Snackbar TransitionComponent={transition} anchorOrigin={{ 'vertical':'top', 'horizontal':'center' }} open={open} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+                            .ابتدا نام و نام نمایشی آزمون را وارد کنید
+                        </Alert>
+                    </Snackbar>
+                </Stack>
                 <div className="flex flex-row-reverse items-center justify-center w-full">
                     <Box
                         component="form"

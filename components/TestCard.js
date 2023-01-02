@@ -29,12 +29,13 @@ const TestCard = ({test, testSet, setTestSet}) => {
 		Router.push(`/Tests/Manage/${test.name}`)
 	}
   return (
-    <div className="flex flex-col items-center justify-center h-72 w-64  mt-20 mr-20 p-3 rounded-xl bg-sky-100">
-        <div className="flex w-full h-full justify-center items-center bg-lime-50 rounded-lg">
+    <div className="flex flex-col items-center justify-center h-72 w-64  mt-20 mr-20 p-3 rounded-xl bg-sky-200">
+        <div className="flex w-full h-full justify-center items-center bg-gray-200 rounded-lg">
             <h1 className="text-8xl">{test.name}</h1>
         </div>
-        <div className="w-full py-2 flex flex-col justify-between">
-            <Button className="w-full bg-sky-600 rounded-lg" variant="contained" onClick={()=>edit(test)}>  ویرایش </Button>
+        <div className="w-full py-2 flex flex-col justify-between items-center">
+            <h3 className="pb-2">{test.display_name}</h3>
+			<Button className="w-full bg-sky-600 rounded-lg" variant="contained" onClick={()=>edit(test)}>  ویرایش </Button>
             <Button className="w-full bg-red-600 mt-1 rounded-lg" variant="contained" color="error" onClick={()=>removeTest(test)}> حذف آزمون </Button>
         </div>
     </div>
