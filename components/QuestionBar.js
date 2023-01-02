@@ -73,7 +73,7 @@ export default function QuestionBar({question, questions, setQuestions, test}) {
 					setQuestions(questions);
 				}
 			}
-			if (questionText != ""){
+			if (questionText != "" && (questionText != question.text || coefficient != question.coefficient)){
 				vt();
 			}
 		}, [questionText, coefficient, question, questions, setQuestions, test, token])

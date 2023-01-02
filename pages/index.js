@@ -40,6 +40,7 @@ export default function InputAdornments() {
     <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
       <div>
         <TextField
+          dir="rtl"
           label="With normal TextField"
           id="outlined-start-adornment"
           sx={{ m: 1, width: '25ch' }}
@@ -95,6 +96,7 @@ export default function InputAdornments() {
       </div>
       <div>
         <TextField
+          dir="rtl"
           label="With normal TextField"
           id="filled-start-adornment"
           sx={{ m: 1, width: '25ch' }}
@@ -149,6 +151,7 @@ export default function InputAdornments() {
       </div>
       <div>
         <TextField
+          dir="rtl"
           label="With normal TextField"
           id="standard-start-adornment"
           sx={{ m: 1, width: '25ch' }}

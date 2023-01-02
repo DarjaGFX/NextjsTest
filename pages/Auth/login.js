@@ -112,6 +112,7 @@ export default function LoginPage() {
                         className="flex flex-col items-center  p-10 rounded-3xl border-2"
                     >
                         <TextField 
+                            dir="rtl"
                             id="standard-basic" 
                             inputProps={{ inputMode: 'numeric', pattern: '09[0-9]{9}' }}
                             label="Mobile" 
@@ -120,6 +121,7 @@ export default function LoginPage() {
                             disabled
                         />
                         <TextField 
+                            dir="rtl"
                             id="otpField" 
                             inputProps={{ inputMode: 'numeric', pattern: '09[0-9]{9}' }}
                             inputRef={VCodeRef}
@@ -146,6 +148,7 @@ export default function LoginPage() {
                         autoComplete="off"
                     >
                         <TextField 
+                            dir="rtl"
                             id="mobileField" 
                             inputProps={{ inputMode: 'numeric', pattern: '09[0-9]{9}' }}
                             label="Mobile" 
