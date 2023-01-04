@@ -3,21 +3,19 @@ import { useEffect, useRef, useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import * as QuestionApi from '../api/apiQuestions';
 import { toast } from "react-hot-toast";
-import Cookies from "universal-cookie";
 import CheckIcon from '@mui/icons-material/Check';
 import ToggleButton from '@mui/material/ToggleButton';
+import { useAuth } from "../hooks/use-auth";
 
-
-const cookies = new Cookies();
 
 export default function QuestionBar({question, questions, setQuestions, test}) {
 		const [questionText, setQuestionText] = useState(question?.text);
 		const [coefficient, setCoefficient] = useState(question?.coefficient);
+		const auth = useAuth();
 
 		const handleChange = (event, newCoefficient) => {
 			if (newCoefficient !== null) {
 				setCoefficient(newCoefficient);
-				// console.log(coefficient);
 			}
 		};
 		
@@ -28,8 +26,7 @@ export default function QuestionBar({question, questions, setQuestions, test}) {
 			}
 			else{
 				const refreshToast = toast.loading('...در حال حذف سوال');
-				const token = cookies.get("token");
-				const {status} = await QuestionApi.DeleteQuestion(question.id, token);
+				const {status} = await QuestionApi.DeleteQuestion(question.id, auth?.user?.token);
 				if (status != 200){
 					toast.error('.حذف سوال با خطا مواجه شد', {
 						id: refreshToast,
@@ -45,7 +42,6 @@ export default function QuestionBar({question, questions, setQuestions, test}) {
 			}
 		};
 
-		const token = cookies.get("token");
 		useEffect(() => {
 			const vt = async () => {
 				const response = typeof(question.id)=="string" ?  await QuestionApi.PostCreateQuestion(
@@ -54,7 +50,7 @@ export default function QuestionBar({question, questions, setQuestions, test}) {
 							"text": questionText,
 							"coefficient": coefficient
 						}),
-						token
+						auth?.user?.token
 					):
 					await QuestionApi.PutUpdateQuestion(
 						JSON.stringify({
@@ -62,7 +58,7 @@ export default function QuestionBar({question, questions, setQuestions, test}) {
 							"text": questionText,
 							"coefficient": coefficient
 						}),
-						token
+						auth?.user?.token
 					)
 				if (response.status == 200){
 					questions.filter(t => t.id == question.id).map(x=>{
@@ -76,7 +72,7 @@ export default function QuestionBar({question, questions, setQuestions, test}) {
 			if (questionText != "" && (questionText != question.text || coefficient != question.coefficient)){
 				vt();
 			}
-		}, [questionText, coefficient, question, questions, setQuestions, test, token])
+		}, [questionText, coefficient, question, questions, setQuestions, test, auth])
 		
 		
 		return (

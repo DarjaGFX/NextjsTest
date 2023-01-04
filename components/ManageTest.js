@@ -3,18 +3,17 @@ import { useEffect, useState } from "react";
 import * as TestApi from '../api/apiTests';
 import FloatingButton from "./FloatingButton";
 import QuestionBar from "./QuestionBar";
-import Cookies from "universal-cookie";
 import Snackbar from '../components/Snakbar';
+import Tooltip from '@mui/material/Tooltip';
+import { useAuth } from "../hooks/use-auth";
 
-
-const cookies = new Cookies();
 
 export default function ManageTest ({test}){
     const [testName, setTestName] = useState(test.name);
     const [testDisplayName, setTestDisplayName] = useState(test.display_name);
     const [questions, setQuestions] = useState([]);
     const [open, setOpen] = useState(false);
-    const token = cookies.get("token");
+    const auth = useAuth();
 
     useEffect(() => {
         const vt = async () => {
@@ -24,14 +23,14 @@ export default function ManageTest ({test}){
                     name: testName,
                     display_name: testDisplayName
                 }),
-                token
+                auth?.user?.token
             ):
             await TestApi.PostCreateTest(
                 JSON.stringify({
                     name: testName,
                     display_name: testDisplayName
                 }),
-                token
+                auth?.user?.token
             )
             if (response.status == 200){
                 test.id = Number(response.data.id);
@@ -40,7 +39,7 @@ export default function ManageTest ({test}){
         if (testName != "" && testDisplayName != "" && (testName != test.name || testDisplayName != test.display_name)){
             vt();
         }
-    }, [test, testName, testDisplayName, token])
+    }, [test, testName, testDisplayName, auth])
 
     useEffect(() => {
         const taf = async () => {
@@ -56,13 +55,15 @@ export default function ManageTest ({test}){
                 setQuestions([...questions, {id:"0"+(new Date()).valueOf(), text:"", coefficient:0}]);
             }
         }else{
-            setOpen(true);
+            setOpen(!open);
         }
     }
 
     return (
         <>
-            <FloatingButton func={addQuestionbar}/>
+            <Tooltip title="سوال جدید">
+                <FloatingButton func={addQuestionbar}/>
+            </Tooltip>
             <div className="flex flex-col items-center w-full h-full overflow-scroll scroll-smooth scrollbar-hide" >
                 <Snackbar open={open} setOpen={setOpen} severity="warning" message={".ابتدا نام و نام نمایشی آزمون را وارد کنید"} />
                 <div className="flex flex-row-reverse items-center justify-center w-full">
@@ -95,7 +96,8 @@ export default function ManageTest ({test}){
                         />
                     </Box>
                 </div>
-                    {questions?.length>0 ? questions?.map(q=>{
+                    {questions?.length>0 ? 
+                        questions?.sort((a, b) => a.id-b.id).map(q=>{
                             return (
                                 <QuestionBar key={q?.id} question={q} questions={questions} setQuestions={setQuestions} test={test}/>
                             )

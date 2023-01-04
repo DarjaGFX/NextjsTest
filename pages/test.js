@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { useState } from "react";
 import toast from "react-hot-toast"
-
+import DrawerSidebar from '../components/DrawerSidebar';
 
 export default function Index(){
     const [x , setx] = useState(0);
@@ -14,6 +14,7 @@ export default function Index(){
     }
     return (
         <>
+            {/* <DrawerSidebar /> */}
             <Button onClick={() => setx(x-1)}>-</Button>
             <p className="text-3xl font-bold underline">{x}</p>
             <Button onClick={() => setx(x+1)}>+</Button>

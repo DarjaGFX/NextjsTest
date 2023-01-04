@@ -6,7 +6,12 @@ const PostLoginRequestVerificationCode = async (params) => {
 };
 
 
-const PostLogin = async (params) => {
+const PostLogin = async (username, password) => {
+  const body_data = [
+    'username=' + username,
+    'password=' + password
+  ];
+  const params = body_data.join('&');
   const data = await api.post("/user/login", params, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

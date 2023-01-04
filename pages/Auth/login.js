@@ -5,8 +5,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import toast from "react-hot-toast";
 import { useRef } from "react";
-import Cookies from "universal-cookie";
+// import Cookies from "universal-cookie";
 import * as api from "../../api/apiLogin";
+import { useAuth } from "../../hooks/use-auth";
 
 
 export default function LoginPage() {
@@ -15,26 +16,26 @@ export default function LoginPage() {
     const VCodeRef = useRef(null);
     const [VCode, setVCode] = useState("");
     const [sendCode, setsendCode] = useState(false);
-    
+    const auth = useAuth();
     
     useEffect(() => {
         const tf = async (VCode, mobile) => {
             try{
                 if(mobile != "" && VCode != ""){
-                    const body_data = [
-                        'username=' + mobile,
-                        'password=' + VCode
-                    ]
-                    const login = await api.PostLogin(body_data.join('&'));
-                    if (login.status === 200){
-                        // window.sessionStorage.setItem("token", data?.access_token)
-                        const cookies = new Cookies();
-                        cookies.set("token", login.data?.access_token, {path: '/'});
+                    auth.signin(mobile, VCode)
+                    if(auth.user){
                         Router.push('/Dashboard');
                     }
-                    else{
-                        // Router.reload();
-                    }
+                    // const login = await api.PostLogin(username=mobile, password=VCode);
+                    // if (login.status === 200){
+                        // // window.sessionStorage.setItem("token", data?.access_token)
+                        // const cookies = new Cookies();
+                        // cookies.set("token", login.data?.access_token, {path: '/'});
+                        // Router.push('/Dashboard');
+                    // }
+                    // else{
+                    //     // Router.reload();
+                    // }
                 }
             }
             catch{}
@@ -44,7 +45,7 @@ export default function LoginPage() {
         }
         catch{
         }
-    }, [VCode, mobile])
+    }, [VCode, mobile, auth])
     
     useEffect(() => {
         const tf = async (mobile) =>{

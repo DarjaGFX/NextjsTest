@@ -1,17 +1,15 @@
 import { Button } from "@mui/material"
 import  Router  from "next/router";
 import { toast } from "react-hot-toast";
-import Cookies from "universal-cookie";
 import * as api from '../api/apiTests';
+import { useAuth } from "../hooks/use-auth";
 
-
-const cookies = new Cookies();
 
 const TestCard = ({test, testSet, setTestSet}) => {
-  const removeTest = async (test) =>{
+	const auth = useAuth();
+	const removeTest = async (test) =>{
 		const refreshToast = toast.loading('...در حال حذف آزمون');
-	    const token = cookies.get("token");
-		const {status} = await api.DeleteTestByID(test.id, token);
+		const {status} = await api.DeleteTestByID(test.id, auth?.user?.token);
 		if (status != 200){
 			toast.error('.حذف آزمون با خطا مواجه شد', {
 				id: refreshToast,

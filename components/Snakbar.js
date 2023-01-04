@@ -1,7 +1,8 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import Slide from '@mui/material/Slide';
 
 const Alert = forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -10,6 +11,11 @@ const Alert = forwardRef(function Alert(props, ref) {
 export default function Snakbar({open, setOpen, message, severity="info"}) {
     // const [open, setOpen] = useState(false);
     const [transition, setTransition] = useState(undefined);
+
+    useEffect(() => {
+        setTransition(() => TransitionRight);
+    }, [open])
+    
 
     const handleClick = () => {
         setTransition(() => TransitionRight);
@@ -23,7 +29,6 @@ export default function Snakbar({open, setOpen, message, severity="info"}) {
         if (reason === 'clickaway') {
             return;
         }
-    
         setOpen(false);
     };
     return (
