@@ -16,18 +16,21 @@ export const useAuth = () => {
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   // Wrap any Firebase methods we want to use making sure ...
   // ... to save the user to state.
   const signin = (mobile, password) => {
-    return loginApi.PostLogin(mobile, password)
-      .then((response) => {
-        loginApi.PostVerifyToken(response.data.access_token)
-        .then((data) => {
-            setUser({...data.data, token:response.data.access_token});
-            return data.data;
-        })
-      });
+	return loginApi.PostLogin(mobile, password)
+	  .then((response) => {
+		loginApi.PostVerifyToken(response.data.access_token)
+		.then((data) => {
+			setUser({...data.data, token:response.data.access_token});
+			setIsAdmin(Boolean(data.data.url));
+			return data.data;
+		})
+	  });
   };
+
 //   const signup = (email, password) => {
 //     return firebase
 //       .auth()
@@ -38,8 +41,9 @@ function useProvideAuth() {
 //       });
 //   };
   const signout = () => {
-        setUser(false);
-        return false;
+		setUser(false);
+		setIsAdmin(false);
+		return false;
   };
 //   const sendPasswordResetEmail = (email) => {
 //     return firebase
@@ -74,11 +78,12 @@ function useProvideAuth() {
 //   }, []);
   // Return the user object and auth methods
   return {
-    user,
-    signin,
-    // signup,
-    signout,
-    // sendPasswordResetEmail,
-    // confirmPasswordReset,
+	user,
+	isAdmin,
+	signin,
+	// signup,
+	signout,
+	// sendPasswordResetEmail,
+	// confirmPasswordReset,
   };
 }
